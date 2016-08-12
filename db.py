@@ -166,7 +166,7 @@ class DB:
             if r == 0:
                 self.insert(dict(hostname = row['hostname'], dev_id=row['dev_id'], status='UP', ip_add=row['ip_add']))
             else:
-                self.insert(dict(hostname = row['hostname'], dev_id=row['dev_id'], status='Down', ip_add=row['ip_add']))
+                self.insert(dict(hostname = row['hostname'], dev_id=row['dev_id'], status='DOWN', ip_add=row['ip_add']))
             cmd = subprocess.Popen(["ping", "-c", "1", row['ip_add']], stdout=subprocess.PIPE)
             output = cmd.communicate()[0]
             match = re.search(b'(\d+\.\d+)\/(\d+\.\d+)\/(\d+\.\d+)\/(\d+\.\d+)\s+ms', output)
