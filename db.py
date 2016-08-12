@@ -181,7 +181,7 @@ class DB:
               ip_add
             , last_seen
             , latency
-            from ping_history where hostname=?""", [hostname])
+            from ping_history where hostname=? order by last_seen DESC limit 120""", [hostname])
         results = c.fetchall()
         for r in results:
             dev_dict = dict()

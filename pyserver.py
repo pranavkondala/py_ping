@@ -8,27 +8,28 @@ import logging
 
 app = Flask(__name__)
 
+
 def check_ping():
     with app.app_context():
-         logging.debug('started')
-         db = get_db()
-         while True:
-             rows = db.get_device_data()
-             for row in rows:
-                 r = os.system('ping -c 1 ' + row['ip_add'])
-                 if r == 0:
-                     db.insert(dict(hostname=row['hostname'], dev_id=row['dev_id'], status='UP', ip_add=row['ip_add']))
-                 else:
-                     db.insert(dict(hostname=row['hostname'], dev_id=row['dev_id'], status='Down', ip_add=row['ip_add']))
-                 cmd = subprocess.Popen(["ping", "-c", "1", row['ip_add']], stdout=subprocess.PIPE)
-                 output = cmd.communicate()[0]
-                 match = re.search(b'(\d+\.\d+)\/(\d+\.\d+)\/(\d+\.\d+)\/(\d+\.\d+)\s+ms', output)
-                 if not (match is None):
-                     avg = float(match.group(1))
-                     db.update_latency(dict(dev_id=row['dev_id'], latency=avg))
-             time.sleep(1)
-         logging.debug('exited')
-         return None
+        logging.debug('started')
+        db = get_db()
+        while True:
+            rows = db.get_device_data()
+            for row in rows:
+                r = os.system('ping -c 1 ' + row['ip_add'])
+                if r == 0:
+                    db.insert(dict(hostname=row['hostname'], dev_id=row['dev_id'], status='UP', ip_add=row['ip_add']))
+                else:
+                    db.insert(dict(hostname=row['hostname'], dev_id=row['dev_id'], status='DOWN', ip_add=row['ip_add']))
+                cmd = subprocess.Popen(["ping", "-c", "1", row['ip_add']], stdout=subprocess.PIPE)
+                output = cmd.communicate()[0]
+                match = re.search(b'(\d+\.\d+)\/(\d+\.\d+)\/(\d+\.\d+)\/(\d+\.\d+)\s+ms', output)
+                if not (match is None):
+                    avg = float(match.group(1))
+                    db.update_latency(dict(dev_id=row['dev_id'], latency=avg))
+            time.sleep(1)
+        logging.debug('exited')
+        return None
 
 
 def get_db():
