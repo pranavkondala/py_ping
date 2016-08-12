@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block body %}
+<div class="center">
+<form action="{{ url_for('adddev') }}" method="POST">
+    <h3>Add New Device</h3>
+    Hostname<br>
+    <input type ="text" name = "hostname" /></br>
+    IP Address<br>
+    <input type = "text" name ="ip_add" /></br>
+    <input type = "submit" value="submit" />
+</form>
+</div>
+{% endblock body %}

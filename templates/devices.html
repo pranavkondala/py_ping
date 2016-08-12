@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block body %}
+<table class="table table-striped table-hover table-bordered" style="width: 100%">
+<tr>
+    <th>Device ID</th>
+    <th>Hostname</th>
+    <th>Address</th>
+    <th>Latency</th>
+    <th>First seen</th>
+    <th>Last seen</th>
+    <th>Status</th>
+</tr>
+{% for device in devices %}
+    <tr>
+        <td>{{ device['dev_id'] }}</td>
+        <td><a href="/device/{{ device['hostname'] }}">{{ device['hostname'] }}</a></td>
+        <td>{{ device['ip_add'] }}</td>
+        <td>{{ device['latency'] }}</td>
+        <td>{{ device['first_seen'] }}</td>
+        <td>{{ device['last_seen'] }}</td>
+        <td><img src="/static/images/{{ device['status'] }}.png"></a></td>
+    </tr>
+{% endfor %}
+</table>
+
+{% endblock body %}
