@@ -8,6 +8,15 @@ import logging
 
 app = Flask(__name__)
 
+def avg_latency(latency):
+    count = 0
+    total = 0
+    for i in latency:
+        total += i
+        count += 1
+    print(total,count)
+    avg = total/count
+    return avg
 
 def check_ping():
     with app.app_context():
@@ -86,7 +95,8 @@ def device(hostname):
     # print (x_data,y_data,hostname)
     data = dict(x=x_data,y=y_data)
     length = len(x_data)
-    return render_template('device.html', data = data, length = length)
+    avg = avg_latency(y_data)
+    return render_template('device.html', data = data, length = length, avg = avg)
 
 
 if __name__ == "__main__":

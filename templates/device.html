@@ -1,12 +1,14 @@
 {% extends "base.html" %}
 
 {% block body %}
- <html>
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <script type="text/javascript">
-      google.charts.load('current', {'packages':['corechart']});
-      google.charts.setOnLoadCallback(drawChart);
-      function drawChart() {
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript">
+      google.charts.load('current', {'packages':['corechart','gauge']});
+
+      google.charts.setOnLoadCallback(drawPingChart);
+      google.charts.setOnLoadCallback(drawGaugeChart);
+
+      function drawPingChart() {
         var data = google.visualization.arrayToDataTable([
           ['Time', 'latency'],
           {%- for i in range(length) %}
@@ -16,15 +18,49 @@
 
         var options = {
           title: 'Ping History',
-          hAxis: {title: 'Time',  titleTextStyle: {color: '#333'}},
+          hAxis: {title: 'Year',  titleTextStyle: {color: '#333'}},
           vAxis: {minValue: 0}
         };
 
-        var chart = new google.visualization.AreaChart(document.getElementById('chart_div'));
+        var chart = new google.visualization.AreaChart(document.getElementById('chart_ping_div'));
         chart.draw(data, options);
       }
+
+    function drawGaugeChart() {
+
+        var data = google.visualization.arrayToDataTable([
+          ['Label', 'Value'],
+          ['Latency(ms)', 80],
+          ['Packet loss(%)', 55]
+        ]);
+
+        var options = {
+          title: 'Average Latency and Packet loss',
+          width: 800,
+          height: 240,
+          redFrom: 90,
+          redTo: 100,
+          yellowFrom: 75,
+          yellowTo: 90,
+          minorTicks: 5
+        };
+
+        var chart = new google.visualization.Gauge(document.getElementById('gauge_chart_div'));
+
+        chart.draw(data, options);
+
+        setInterval(function() {
+          data.setValue(0, 1, {{avg}});
+          chart.draw(data, options);
+        }, 1000);
+        setInterval(function() {
+          data.setValue(1, 1, 0.00);
+          chart.draw(data, options);
+        }, 1000);
+      }
+
     </script>
-  <body>
-    <div id="chart_div" style="width: 1500px; height: 800px;"></div>
-    </body>
+<div id="chart_ping_div" style="width: 1500px; height: 800px;"></div>
+<div align="center"><h4>Average Latency(ms) and Packet drop(%)</h4></div>
+<div align="center">  <div id="gauge_chart_div" style="width: 400px; height: 120px;"></div> </div>
 {% endblock body %}
