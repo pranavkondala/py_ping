@@ -84,12 +84,9 @@ def device(hostname):
         x_data.append(dev['last_seen'])
         y_data.append(dev['latency'])
     # print (x_data,y_data,hostname)
-    line_chart = pygal.StackedLine(fill=True)
-    line_chart.title = 'Ping History'
-    line_chart.x_lablels = x_data
-    line_chart.add(hostname, y_data)
-    graph = line_chart.render(is_unicode=True)
-    return render_template('device.html', graph=graph)
+    data = dict(x=x_data,y=y_data)
+    length = len(x_data)
+    return render_template('device.html', data = data, length = length)
 
 
 if __name__ == "__main__":

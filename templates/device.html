@@ -1,7 +1,30 @@
 {% extends "base.html" %}
 
 {% block body %}
-       <div class="container" align="left">
-			<embed> {{graph|safe}} </embed>
-	  </div>
+ <html>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Time', 'latency'],
+          {%- for i in range(length) %}
+          ['{{ data["x"][i] }}',{{ data["y"][i] }}],
+          {%- endfor %}
+        ]);
+
+        var options = {
+          title: 'Ping History',
+          hAxis: {title: 'Time',  titleTextStyle: {color: '#333'}},
+          vAxis: {minValue: 0}
+        };
+
+        var chart = new google.visualization.AreaChart(document.getElementById('chart_div'));
+        chart.draw(data, options);
+      }
+    </script>
+  <body>
+    <div id="chart_div" style="width: 1500px; height: 800px;"></div>
+    </body>
 {% endblock body %}
