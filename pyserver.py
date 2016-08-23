@@ -181,10 +181,10 @@ def device(hostname):
 @app.route('/traceroute/<ip_add>')
 def traceroute(ip_add):
     db = get_db()
-    devices = db.get_device_data(ip_add)
+    dev = db.get_device_data(ip_add)
     data = trace_route(ip_add)
     logging.debug('stop trace webapp')
-    return render_template('traceroute.html', devices=devices, data=data)
+    return render_template('traceroute.html', dev=dev[0], data=data)
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG, format='(%(threadName)-10s) %(message)s', )

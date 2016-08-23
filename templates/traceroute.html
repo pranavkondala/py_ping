@@ -2,10 +2,11 @@
 
 {% block body %}
 <h1>Trace Route</h1>
-<h3>{{ devices['hostname'] }}</h3>
-<h3>This will take time. Refresh if no response </h3>
-<p> AS Path: {{ data['asn_list'] }}</p>
-<p> Host names:{{ data['host_list'] }}</p>
-<p> IP address:{{ data['host_add'] }}</p>
+<h3>{{ dev['hostname'] }} || {{ dev['ip_add'] }}</h3>
+<p>Have an ideas to improve? Feel free to leave a<a href="https://www.messenger.com/t/pranavkondala"> message</a></p>
+<h3>Data visualization coming soon!! </h3>
+<p><b>AS Path: </b> {{ data['asn_list'] }}</p>
+<p><b>Host names: </b> {{ data['host_list'] }}</p>
+<p><b>IP address: </b> {{ data['host_add'] }}</p>
 
 {% endblock body %}
