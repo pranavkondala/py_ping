@@ -15,7 +15,7 @@
     <tr>
         <td>{{ device['dev_id'] }}</td>
         <td><a href="/device/{{ device['hostname'] }}">{{ device['hostname'] }}</a></td>
-        <td>{{ device['ip_add'] }}</td>
+        <td><a href="/traceroute/{{ device['ip_add'] }}">{{ device['ip_add'] }}</a></td>
         <td>{{ device['latency'] }}</td>
         <td>{{ device['first_seen'] }}</td>
         <td>{{ device['last_seen'] }}</td>

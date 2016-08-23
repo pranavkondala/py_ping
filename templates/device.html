@@ -54,13 +54,14 @@
           chart.draw(data, options);
         }, 1000);
         setInterval(function() {
-          data.setValue(1, 1, 0.00);
+          data.setValue(1, 1, {{loss}});
           chart.draw(data, options);
         }, 1000);
       }
 
     </script>
+<div align="center"><h2>Hostname : {{hostname}}</h2></div>
 <div id="chart_ping_div" style="width: 1500px; height: 800px;"></div>
 <div align="center"><h4>Average Latency(ms) and Packet drop(%)</h4></div>
-<div align="center">  <div id="gauge_chart_div" style="width: 400px; height: 120px;"></div> </div>
+<div align="center"><div id="gauge_chart_div" style="width: 400px; height: 120px;"></div> </div>
 {% endblock body %}

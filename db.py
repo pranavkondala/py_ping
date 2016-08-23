@@ -38,13 +38,15 @@ class DB:
                 status text DEFAULT Pending,
                 latency int,
                 first_seen datetime,
-                last_seen datetime
+                last_seen datetime,
+                packet_loss int
                 )""")
         c.execute("""create table ping_history(
                 hostname text,
                 ip_add text,
                 latency int,
-                last_seen datetime
+                last_seen datetime,
+                packet_loss int
                 )""")
         c.execute("""create trigger update_history update of last_seen on ip_address
                 for each row
@@ -54,6 +56,7 @@ class DB:
                  , ip_add
                  , latency
                  , last_seen
+                 , packet_loss
                  )
                 values
                  (
@@ -61,6 +64,7 @@ class DB:
                  , new.ip_add
                  , new.latency
                  , new.last_seen
+                 , new.packet_loss
                  );
                 END""")
         self._conn.commit()
@@ -135,7 +139,8 @@ class DB:
                             status,
                             latency,
                             last_seen,
-                            first_seen
+                            first_seen,
+                            packet_loss
                             from ip_address;""")
         else:
             c.execute("""select dev_id,
@@ -144,7 +149,8 @@ class DB:
                             status,
                             latency,
                             last_seen,
-                            first_seen from ip_address where ip_add=?""", [ip_add])
+                            first_seen,
+                            packet_loss from ip_address where ip_add=?""", [ip_add])
         results = c.fetchall()
         for r in results:
             dev_dict = dict()
@@ -156,6 +162,7 @@ class DB:
             dev_dict['latency'] = r[4]
             dev_dict['last_seen'] = r[5]
             dev_dict['first_seen'] = r[6]
+            dev_dict['packet_loss'] = r[7]
             devlist.append(dev_dict)
         return devlist
 
@@ -181,6 +188,7 @@ class DB:
               ip_add
             , last_seen
             , latency
+            , packet_loss
             from ping_history where hostname=? order by last_seen DESC limit 120""", [hostname])
         results = c.fetchall()
         for r in results:
@@ -188,8 +196,14 @@ class DB:
             dev_dict['ip_add'] = r[0]
             dev_dict['last_seen'] = r[1]
             dev_dict['latency'] = r[2]
+            dev_dict['packet_loss'] = r[3]
             devlist.append(dev_dict)
         return devlist
+
+    def update_packet_loss(self, row):
+        c = self._conn.cursor()
+        c.execute('update ip_address set packet_loss= ? where dev_id = ?', (row['packet_loss'], row['dev_id']))
+        self._conn.commit()
 
     def repeat_check(self):
         self.check_ping()

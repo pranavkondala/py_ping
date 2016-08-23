@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block body %}
+<h1>Trace Route</h1>
+<h3>{{ devices['hostname'] }}</h3>
+<h3>This will take time. Refresh if no response </h3>
+<p> AS Path: {{ data['asn_list'] }}</p>
+<p> Host names:{{ data['host_list'] }}</p>
+<p> IP address:{{ data['host_add'] }}</p>
+
+{% endblock body %}
